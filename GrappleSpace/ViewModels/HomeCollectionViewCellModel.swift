@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+struct HomeCollectionViewCellModel{
+    let courseTitle: String
+    let courseImageName: String
+}

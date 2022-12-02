@@ -10,21 +10,31 @@ import UIKit
 class HomeCourseCollectionViewTableViewCell: UITableViewCell {
     
     static let identifier = "HomeCourseCollectionViewTableViewCell"
+    private let courses: [HomeCollectionViewCellModel] = [
+        HomeCollectionViewCellModel(courseTitle: "Python Programming", courseImageName: "phytonprogramhome"),
+        HomeCollectionViewCellModel(courseTitle: "Front End Web Development", courseImageName: "frontendhome"),
+        HomeCollectionViewCellModel(courseTitle: "Structured Query Language", courseImageName: "sqlhome"),
+        HomeCollectionViewCellModel(courseTitle: "Back End Development", courseImageName: "backendhome"),
+        HomeCollectionViewCellModel(courseTitle: "User Interface | User Experience", courseImageName: "uiuxhome"),
+        HomeCollectionViewCellModel(courseTitle: "Graphic Design", courseImageName: "graphicsdesignhome"),
+        HomeCollectionViewCellModel(courseTitle: "Computer Aided Designs", courseImageName: "computeraidedhome"),
+        HomeCollectionViewCellModel(courseTitle: "Full Stack Web Development", courseImageName: "fullstackhome"),
+        HomeCollectionViewCellModel(courseTitle: "Video Animation", courseImageName: "videoanimationhome")
+    ]
     
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 160, height: 200)
+        layout.itemSize = CGSize(width: 140, height: 200)
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        
-        collection.register(HomeCourseCollectionViewCell.self, forCellWithReuseIdentifier: HomeCourseCollectionViewCell.identifier)
         collection.backgroundColor = .clear
+        collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         return collection
     }()
-   
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.9))
+        contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.9))
         contentView.addSubview(collectionView)
         collectionView.register(HomeCourseCollectionViewCell.self, forCellWithReuseIdentifier: HomeCourseCollectionViewCell.identifier)
         collectionView.delegate = self
@@ -38,6 +48,7 @@ class HomeCourseCollectionViewTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         collectionView.frame = contentView.bounds
+        
     }
 
 }
@@ -45,13 +56,15 @@ class HomeCourseCollectionViewTableViewCell: UITableViewCell {
 extension HomeCourseCollectionViewTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomeCourseCollectionViewCell.identifier, for: indexPath) as? HomeCourseCollectionViewCell else{return UICollectionViewCell()}
-        cell.backgroundColor = .white
-        cell.configureCell(with: "frontendhome")
+        cell.configureCell(with: courses[indexPath.row])
+        cell.clipsToBounds = true
+        cell.layer.cornerRadius = 6
         return cell
 
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return  4
+        return  courses.count
+        
     }
 }
