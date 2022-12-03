@@ -24,7 +24,7 @@ class TopSearchCollectionViewCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .clear
+        contentView.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
         contentView.addSubview(courseButton)
     }
     
@@ -52,7 +52,7 @@ class TopSearchCollectionViewCell: UICollectionViewCell {
         courseButton.setTitle(name, for: .normal)
         courseButton.titleLabel?.numberOfLines = 0
         courseButton.setTitleColor(.black, for: .normal)
-        courseButton.titleLabel?.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        courseButton.titleLabel?.font = UIFont(name: "SFProDisplay-SemiboldItalic", size: 10)
         courseButton.titleLabel?.textAlignment = .center
         courseButton.titleLabel?.font = UIFont.italicSystemFont(ofSize: 9)
     }

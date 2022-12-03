@@ -8,122 +8,43 @@
 import UIKit
 
 class HomeViewController: UIViewController {
-    
-    private let topSearches = ["Python Programming", "User Interface | User Experience", "Front End Web Development", "Full Stack Web Development", "Graphic Design", "Animation Design"]
-    
-    private let userImageView: UIView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "femaleavatar")
-        imageView.contentMode = .scaleAspectFill
-        return imageView
-    }()
-    
-    private let usernameTextLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .orange
-        label.font = UIFont.italicSystemFont(ofSize: 12)
-        label.text = "Hi, Olawunmi" // change this later on
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        return label
-    }()
-    
-    private let headerTitleLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textColor = .purple
-        label.font = UIFont.systemFont(ofSize: 13, weight: .bold)
-        label.text = "Find the course made just for you."
-        label.textAlignment = .left
-        label.numberOfLines = 0
-        return label
-        
-    }()
-    
-    private let homepagePictureViewTextLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Want to get a tech skill? \nTake a look at the course that suits you most."
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.font = UIFont.italicSystemFont(ofSize: 12)
-        label.textColor = .white
-        return label
-                
-    }()
-    
-    private let homepagePictureView: UIView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(named: "homepagepicture")
-        return imageView
-    }()
-    
-    private let courseSearchBar: UISearchBar = {
-        let searchBar = UISearchBar(frame: .zero)
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
-        searchBar.placeholder = "Search Courses"
-        searchBar.searchBarStyle = .minimal
-        return searchBar
-    }()
-    
-    private let topSearchesLabel: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "Top Searches"
-        label.textColor = UIColor(red: 0.29, green: 0.2, blue: 0.42, alpha: 1)
-        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        label.textAlignment = .left
-        return label
-    }()
 
-    
-    private let topSearchCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = CGSize(width: 110, height: 30)
-        layout.scrollDirection = .horizontal
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(TopSearchCollectionViewCell.self, forCellWithReuseIdentifier: TopSearchCollectionViewCell.identifier)
-        collectionView.isScrollEnabled = false
-        collectionView.backgroundColor = .clear
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        return collectionView
-    }()
-    
-    private let homeCourseTableView: UITableView = {
+    private let homeTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
-        table.register(HomeCourseCollectionViewTableViewCell.self, forCellReuseIdentifier: HomeCourseCollectionViewTableViewCell.identifier)
         table.translatesAutoresizingMaskIntoConstraints = false
-        table.isScrollEnabled = false
-        table.separatorColor = .clear
-        table.backgroundColor = .clear
+        table.separatorStyle = .none
+        table.showsVerticalScrollIndicator = false
+        
+        table.register(TopSearchCollectionViewTableViewCell.self, forCellReuseIdentifier: TopSearchCollectionViewTableViewCell.identifier)
+        
+        table.register(HomeCourseCollectionViewTableViewCell.self, forCellReuseIdentifier: HomeCourseCollectionViewTableViewCell.identifier)
+        
+        table.register(HomePictureViewTableViewCell.self, forCellReuseIdentifier: HomePictureViewTableViewCell.identifier)
+        
+        table.register(HomeSearchBarTableViewCell.self, forCellReuseIdentifier: HomeSearchBarTableViewCell.identifier)
+        table.isScrollEnabled = true
+        table.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
         return table
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = UIColor(cgColor: CGColor(red: 1.0, green: 1.0, blue: 1.0, alpha: 0.9))
-        view.addSubview(homeCourseTableView)
-        view.addSubview(topSearchCollectionView)
-        view.addSubview(topSearchesLabel)
-        view.addSubview(courseSearchBar)
-        view.addSubview(homepagePictureView)
-        view.addSubview(homepagePictureViewTextLabel)
-        view.addSubview(headerTitleLabel)
-        view.addSubview(usernameTextLabel)
-        view.addSubview(userImageView)
-        userImageView.layer.cornerRadius = 30
+        view.backgroundColor =  UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
+        view.addSubview(homeTableView)
         
-        homeCourseTableView.delegate = self
-        homeCourseTableView.dataSource = self
-        topSearchCollectionView.delegate = self
-        topSearchCollectionView.dataSource = self
+        homeTableView.delegate = self
+        homeTableView.dataSource = self
+        
+        configureNavBar()
         
         hideKeyboardWhenTappedAround()
-
+//        Font family names check
+//        for family in UIFont.familyNames.sorted() {
+//            let names = UIFont.fontNames(forFamilyName: family)
+//            print("Family: \(family) Font names: \(names)")
+//        }
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -131,78 +52,32 @@ class HomeViewController: UIViewController {
         applyConstraints()
     }
     
+    private func configureNavBar(){
+        var image = UIImage(named: "femaleavatar")
+        image = image?.withRenderingMode(.alwaysOriginal)
+        let firstButtonItem = UIBarButtonItem(title: nil, image: image, target: self, action: nil)
+        let secondButtonItem = UIBarButtonItem(title: "Hi Olawunmi",image: nil, target: self, action: nil)
+        let tempButtonItem =  UIBarButtonItem(title: "                                          ",image: nil, target: self, action: nil)
+        let buttonItems: [UIBarButtonItem] = [
+            firstButtonItem,secondButtonItem,tempButtonItem
+        ] // Find a way to refactor the code above for the navbar
+                                              // The Olawunmi usernames should also be set from account login
+        navigationItem.leftBarButtonItems = buttonItems
+        
+        navigationController?.navigationBar.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
+    }
     
     func applyConstraints(){
-        let userImageViewConstraints: [NSLayoutConstraint] = [
-            userImageView.heightAnchor.constraint(equalToConstant: 60),
-            userImageView.widthAnchor.constraint(equalToConstant: 60),
-            userImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            userImageView.bottomAnchor.constraint(equalTo: headerTitleLabel.topAnchor, constant: -5)
+        let homeTableViewConstraints: [NSLayoutConstraint] = [
+            homeTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            homeTableView.bottomAnchor.constraint(equalTo: tabBarController!.tabBar.topAnchor, constant: -1),
+            homeTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            homeTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
         ]
-        
-        let usernameTextLabelConstraints: [NSLayoutConstraint] = [
-            usernameTextLabel.leadingAnchor.constraint(equalTo: userImageView.trailingAnchor, constant: 5),
-            usernameTextLabel.centerYAnchor.constraint(equalTo: userImageView.centerYAnchor)
-        ]
-        
-        let homeCourseTableViewConstraints: [NSLayoutConstraint] = [
-            homeCourseTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5),
-            homeCourseTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -5),
-            homeCourseTableView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            homeCourseTableView.bottomAnchor.constraint(equalTo: tabBarController!.tabBar.topAnchor),
-            homeCourseTableView.heightAnchor.constraint(equalToConstant: 290)
-        ]
-        
-        let topSearchCollectionViewConstraints: [NSLayoutConstraint] = [
-            topSearchCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            topSearchCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10),
-            topSearchCollectionView.bottomAnchor.constraint(equalTo: homeCourseTableView.topAnchor, constant: 10),
-            topSearchCollectionView.heightAnchor.constraint(equalToConstant: 70)
-        
-        ]
-        
-        let topSearchesLabelConstraints: [NSLayoutConstraint] = [
-            topSearchesLabel.bottomAnchor.constraint(equalTo: topSearchCollectionView.topAnchor, constant: -10),
-            topSearchesLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            topSearchesLabel.widthAnchor.constraint(equalToConstant: 150)
-        ]
-        
-        let courseSearchBarConstraints: [NSLayoutConstraint] = [
-            courseSearchBar.bottomAnchor.constraint(equalTo: topSearchesLabel.topAnchor, constant: -10),
-            courseSearchBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            courseSearchBar.widthAnchor.constraint(equalToConstant: 295)
-        ]
-        
-        let homepagePictureViewConstraints: [NSLayoutConstraint] = [
-            homepagePictureView.bottomAnchor.constraint(equalTo: courseSearchBar.topAnchor, constant: -10),
-            homepagePictureView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
-            homepagePictureView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
-            homepagePictureView.heightAnchor.constraint(equalToConstant: 145)
-        ]
-        
-        let homepagePictureViewTextLabelConstraints: [NSLayoutConstraint] = [
-            homepagePictureViewTextLabel.topAnchor.constraint(equalTo: homepagePictureView.topAnchor, constant: 45),
-            homepagePictureViewTextLabel.trailingAnchor.constraint(equalTo: homepagePictureView.trailingAnchor, constant: -58),
-            homepagePictureViewTextLabel.widthAnchor.constraint(equalToConstant: 145)
-        ]
-        
-        let headerTitleLabelConstraints: [NSLayoutConstraint] = [
-            headerTitleLabel.bottomAnchor.constraint(equalTo: homepagePictureView.topAnchor, constant: -10),
-            headerTitleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
-            headerTitleLabel.widthAnchor.constraint(equalToConstant: 145)
-        ]
-        
-        NSLayoutConstraint.activate(homeCourseTableViewConstraints)
-        NSLayoutConstraint.activate(topSearchCollectionViewConstraints)
-        NSLayoutConstraint.activate(topSearchesLabelConstraints)
-        NSLayoutConstraint.activate(courseSearchBarConstraints)
-        NSLayoutConstraint.activate(homepagePictureViewConstraints)
-        NSLayoutConstraint.activate(homepagePictureViewTextLabelConstraints)
-        NSLayoutConstraint.activate(headerTitleLabelConstraints)
-        NSLayoutConstraint.activate(usernameTextLabelConstraints)
-        NSLayoutConstraint.activate(userImageViewConstraints)
+        NSLayoutConstraint.activate(homeTableViewConstraints)
         
     }
+    
     
 }
 
@@ -213,48 +88,109 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource{
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeCourseCollectionViewTableViewCell.identifier, for: indexPath) as? HomeCourseCollectionViewTableViewCell else{return UITableViewCell()}
-        return cell
-         
+        switch indexPath.section{
+        case 0:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomePictureViewTableViewCell.identifier, for: indexPath) as? HomePictureViewTableViewCell else{return UITableViewCell()}
+            return cell
+        case 1:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchBarTableViewCell.identifier, for: indexPath) as? HomeSearchBarTableViewCell else{return UITableViewCell()}
+            cell.setPlaceholderText(with: "Search Courses")
+            return cell
+        case 2:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TopSearchCollectionViewTableViewCell.identifier, for: indexPath) as? TopSearchCollectionViewTableViewCell else{return UITableViewCell()}
+            return cell
+        case 3:
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeCourseCollectionViewTableViewCell.identifier, for: indexPath) as? HomeCourseCollectionViewTableViewCell else{return UITableViewCell()}
+            return cell
+        default:
+            return UITableViewCell()
+        }
+        
+        
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-       
-        return 250
+        switch indexPath.section{
+        case 0:
+            return 100
+        case 1:
+            return 30
+        case 2:
+            return 70
+        case 3:
+            return 200
+        default:
+            return 250
+        }
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Courses You Might Consider"
+        switch section{
+        case 0:
+            return "Find the course \nmade just for you "
+        case 1:
+            return "Search"
+        case 2:
+            return "Top Searches"
+        case 3:
+            return "Courses You Might Consider"
+        default:
+            return nil
+        }
+        
     }
     
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let headerView = view as? UITableViewHeaderFooterView {
-            headerView.textLabel?.textAlignment = .center
-            headerView.textLabel?.textColor = .black
-            headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-            headerView.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)}
-    }
-    
-}
-
-extension HomeViewController: UICollectionViewDelegate, UICollectionViewDataSource{
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return topSearches.count
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TopSearchCollectionViewCell.identifier, for: indexPath) as? TopSearchCollectionViewCell else{return UICollectionViewCell()}
-        cell.configure(with: topSearches[indexPath.row])
         
-        return cell
+        switch section{
+        case 0:
+            if let headerView = view as? UITableViewHeaderFooterView {
+                headerView.textLabel?.textAlignment = .left
+                headerView.textLabel?.textColor = UIColor(red: 0.29, green: 0.20, blue: 0.42, alpha: 1)
+                headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-HeavyItalic", size: 14)}
+            
+        case 1:
+            if let headerView = view as? UITableViewHeaderFooterView {
+                headerView.textLabel?.textAlignment = .left
+                headerView.textLabel?.textColor = UIColor(red: 0.29, green: 0.20, blue: 0.42, alpha: 1)
+                headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-HeavyItalic", size: 12)}
+        case 2:
+            if let headerView = view as? UITableViewHeaderFooterView {
+                headerView.textLabel?.textAlignment = .left
+                headerView.textLabel?.textColor = UIColor(red: 0.29, green: 0.20, blue: 0.42, alpha: 1)
+                headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
+            
+        case 3:
+            if let headerView = view as? UITableViewHeaderFooterView {
+                headerView.textLabel?.textAlignment = .center
+                headerView.textLabel?.textColor = UIColor(red: 0.13, green: 0.01, blue: 0.27, alpha: 1)
+                headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
+            
+        default:
+            if let headerView = view as? UITableViewHeaderFooterView {
+                headerView.textLabel?.textAlignment = .center
+                headerView.textLabel?.textColor = .black
+                headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
+        }
     }
-
-
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let defaultOffset = view.safeAreaInsets.top
+        let offset = scrollView.contentOffset.y + defaultOffset
+        navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0,-offset))
+        //implementation for navBar move with scroll
+    }
 }
+
+
 
 // Mark:- For ViewController Keyboard Removal
 

@@ -27,14 +27,14 @@ class HomeCourseCollectionViewTableViewCell: UITableViewCell {
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 140, height: 200)
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.backgroundColor = .clear
+        collection.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
         collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collection.showsHorizontalScrollIndicator = false 
         return collection
     }()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.9))
         contentView.addSubview(collectionView)
         collectionView.register(HomeCourseCollectionViewCell.self, forCellWithReuseIdentifier: HomeCourseCollectionViewCell.identifier)
         collectionView.delegate = self

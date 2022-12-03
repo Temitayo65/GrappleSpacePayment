@@ -12,7 +12,7 @@ class MainTabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
        
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .white
         
         let vc1: UINavigationController = UINavigationController(rootViewController: HomeViewController())
         let vc2: UINavigationController = UINavigationController(rootViewController: CourseViewController())
@@ -31,7 +31,7 @@ class MainTabBarViewController: UITabBarController {
         
         
         tabBar.tintColor = .purple
-        tabBar.barTintColor = .white
+        tabBar.backgroundColor = .white
         
         setViewControllers([vc1,vc2,vc3,vc4], animated: true)
     }

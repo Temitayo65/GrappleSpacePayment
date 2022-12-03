@@ -1,35 +1,33 @@
 //
-//  HomeCourseCollectionViewCell.swift
+//  AllCoursesCollectionViewCell.swift
 //  GrappleSpace
 //
-//  Created by ADMIN on 29/11/2022.
+//  Created by ADMIN on 03/12/2022.
 //
 
 import UIKit
 
-class HomeCourseCollectionViewCell: UICollectionViewCell {
-    
-    static let identifier = "HomeCourseCollectionViewCell"
+class AllCoursesCollectionViewCell: UICollectionViewCell {
+    static let identifier = "AllCoursesCollectionViewCell"
 
     
     private let collectionViewImage: UIImageView = {
-        
         let imageView = UIImageView(frame: .zero)
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.backgroundColor = .white
+        imageView.backgroundColor = .clear
         return imageView
     }()
     
-    let previewButton: UIButton = {
+    let registerButton: UIButton = {
         let button = UIButton(frame: .zero)
         button.layer.borderColor = UIColor.purple.cgColor
         button.layer.borderWidth = 1
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 3
-        button.setTitle("Preview", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 9, weight: .medium)
+        button.setTitle("Register", for: .normal)
+        button.titleLabel?.font = UIFont(name: "SFProDisplay-HeavyItalic", size: 10)
         button.setTitleColor(.purple, for: .normal)
         button.isEnabled = true
         return button
@@ -41,7 +39,7 @@ class HomeCourseCollectionViewCell: UICollectionViewCell {
         label.numberOfLines = 0
         label.textColor = .black
         label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 10, weight: .medium)
+        label.font = UIFont(name: "SFProDisplay-SemiboldItalic", size: 12)
         return label
     }()
     
@@ -49,9 +47,9 @@ class HomeCourseCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         contentView.addSubview(collectionViewImage)
-        contentView.addSubview(previewButton)
+        contentView.addSubview(registerButton)
         contentView.addSubview(courseTitle)
-        contentView.backgroundColor = UIColor(cgColor: CGColor(red: 1, green: 1, blue: 1, alpha: 0.9))
+        contentView.backgroundColor = .white
         applyConstraints()
     }
     
@@ -59,7 +57,7 @@ class HomeCourseCollectionViewCell: UICollectionViewCell {
         fatalError()
     }
         
-    public func configureCell(with model: HomeCollectionViewCellModel){
+    public func configureCell(with model: CoursesCollectionViewCellModel){
         collectionViewImage.image = UIImage(named: model.courseImageName)
         courseTitle.text = model.courseTitle
     }
@@ -73,28 +71,24 @@ class HomeCourseCollectionViewCell: UICollectionViewCell {
             collectionViewImage.heightAnchor.constraint(equalToConstant: contentView.frame.size.height / 3 + 10)
         ]
         
-        let previewButtonConstraints: [NSLayoutConstraint] = [
-            previewButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
-            previewButton.widthAnchor.constraint(equalToConstant: 80),
-            previewButton.heightAnchor.constraint(equalToConstant: 20),
-            previewButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
+        let registerButtonConstraints: [NSLayoutConstraint] = [
+            registerButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -15),
+            registerButton.widthAnchor.constraint(equalToConstant: 80),
+            registerButton.heightAnchor.constraint(equalToConstant: 20),
+            registerButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor)
         
         ]
         
         let courseTitleConstraints: [NSLayoutConstraint] = [
-            courseTitle.bottomAnchor.constraint(equalTo: previewButton.topAnchor, constant: -30),
+            courseTitle.bottomAnchor.constraint(equalTo: registerButton.topAnchor, constant: -30),
             courseTitle.widthAnchor.constraint(equalToConstant: 80),
             courseTitle.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
             
         ]
         
         NSLayoutConstraint.activate(collectionViewImageConstraints)
-        NSLayoutConstraint.activate(previewButtonConstraints)
+        NSLayoutConstraint.activate(registerButtonConstraints)
         NSLayoutConstraint.activate(courseTitleConstraints)
         
-        
-        
     }
-    
-    
 }
