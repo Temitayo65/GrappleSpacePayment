@@ -25,6 +25,7 @@ class HomePictureViewTableViewCell: UITableViewCell {
         
     }
     
+    
     required init?(coder: NSCoder) {
         fatalError()
     }

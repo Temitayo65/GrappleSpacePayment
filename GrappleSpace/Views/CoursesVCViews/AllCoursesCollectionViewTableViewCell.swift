@@ -25,7 +25,7 @@ class AllCoursesCollectionViewTableViewCell: UITableViewCell {
         CoursesCollectionViewCellModel(courseTitle: "Python Programming", courseImageName: "phytonprogramhome")
     ]
     
-    private let collectionView: UICollectionView = {
+    private let allCouresesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.itemSize = CGSize(width: 170, height: 250)
@@ -39,11 +39,11 @@ class AllCoursesCollectionViewTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        contentView.addSubview(collectionView)
-        collectionView.register(AllCoursesCollectionViewCell.self, forCellWithReuseIdentifier: AllCoursesCollectionViewCell.identifier)
+        contentView.addSubview(allCouresesCollectionView)
+        allCouresesCollectionView.register(AllCoursesCollectionViewCell.self, forCellWithReuseIdentifier: AllCoursesCollectionViewCell.identifier)
         
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        allCouresesCollectionView.delegate = self
+        allCouresesCollectionView.dataSource = self
     }
     
     required init?(coder: NSCoder) {
@@ -52,7 +52,7 @@ class AllCoursesCollectionViewTableViewCell: UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        collectionView.frame = contentView.bounds
+        allCouresesCollectionView.frame = contentView.bounds
         
     }
 

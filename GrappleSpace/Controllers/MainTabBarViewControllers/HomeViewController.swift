@@ -23,6 +23,7 @@ class HomeViewController: UIViewController {
         
         table.register(HomeSearchBarTableViewCell.self, forCellReuseIdentifier: HomeSearchBarTableViewCell.identifier)
         table.isScrollEnabled = true
+        table.keyboardDismissMode = .onDrag
         table.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
         return table
     }()

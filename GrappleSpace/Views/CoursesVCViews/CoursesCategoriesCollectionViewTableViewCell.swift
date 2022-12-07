@@ -6,12 +6,22 @@
 //
 
 import UIKit
+protocol TitleManager{
+    func didUpdateTitle(with title: String)
+}
 
-class CoursesCategoriesCollectionViewTableViewCell: UITableViewCell {
-
+class CoursesCategoriesCollectionViewTableViewCell: UITableViewCell, ButtonDataManager {
+    //Try the ButtonManagerDelegate and create the trendingcoursecollectionviewcell
+    
+    private var activeButtonTitle = "All"
+    var delegate: TitleManager?
+//
+//    public func getActiveButtonTitle()-> String{
+//        return activeButtonTitle
+//    }
     static let identifier = "CoursesCategoriesCollectionViewTableViewCell"
     
-    private let categories = ["All", "📈Trending", "Design", "</>Development"]
+    private let courseCategories = ["All", "📈Trending", "Design", "</>Development"]
     private var highlightValue: Bool = false
     private var categoriesDict: [String: Bool] = ["All": true, "📈Trending": false, "Design": false, "</>Development": false]
     
@@ -33,6 +43,7 @@ class CoursesCategoriesCollectionViewTableViewCell: UITableViewCell {
         contentView.addSubview(courseCategoriesCollectionView)
         courseCategoriesCollectionView.delegate = self
         courseCategoriesCollectionView.dataSource = self
+        
     }
     
     required init?(coder: NSCoder) {
@@ -42,43 +53,40 @@ class CoursesCategoriesCollectionViewTableViewCell: UITableViewCell {
     override func layoutSubviews() {
         super.layoutSubviews()
         courseCategoriesCollectionView.frame = bounds
+
     }
+    
+    func didGetCurrentTappedButtonCategory(for button: UIButton) {
+        activeButtonTitle = button.titleLabel?.text ?? "All" // this sets the active button title that has been clicked 
+        delegate?.didUpdateTitle(with: activeButtonTitle) // this method is surely called and is dependent on making the cell the delegator when dequeueing the collectionview
+        // this also help pass the activeButtonTitle to the CourseViewController
+    }
+    
 
 }
 
 extension CoursesCategoriesCollectionViewTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories.count
+            return courseCategories.count
+        
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoursesCategoriesCollectionViewCell.identifier, for: indexPath) as? CoursesCategoriesCollectionViewCell else{return UICollectionViewCell()}
-        let currentCategory = categories[indexPath.row]
-        highlightValue = categoriesDict[currentCategory] ?? false
-        cell.configure(with: currentCategory, for: highlightValue)
-        return cell
+       
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CoursesCategoriesCollectionViewCell.identifier, for: indexPath) as? CoursesCategoriesCollectionViewCell else{return UICollectionViewCell()}
+            let currentCategory = courseCategories[indexPath.row]
+            highlightValue = categoriesDict[currentCategory] ?? false
+            cell.configure(with: currentCategory, for: highlightValue)
+            cell.delegate = self
+            return cell
     }
     
     @objc func categoryButtonTapped(with sender: UIButton){
-        if let sender = sender.titleLabel?.text{
-            categoriesDict[sender] = true
-            switch sender{
-            case "All":
-                setRemainingDictValuesFalse(for: categoriesDict, with: sender)
-            case "📈Trending":
-                setRemainingDictValuesFalse(for: categoriesDict, with: sender)
-            case "Design":
-                setRemainingDictValuesFalse(for: categoriesDict, with: sender)
-                self.courseCategoriesCollectionView.reloadData()
-            case "</>Development":
-                setRemainingDictValuesFalse(for: categoriesDict, with: sender)
-                self.courseCategoriesCollectionView.reloadData()
-            default:
-                categoriesDict[sender] = false
-                self.courseCategoriesCollectionView.reloadData()
-                
-            }
+        if let senderTitle = sender.titleLabel?.text{
+            categoriesDict[senderTitle] = true // lets the cell in the dequeued collectionView have a unique property of true so there is no coinciding cell due to dequeue for efficiency
+            setRemainingDictValuesFalse(for: categoriesDict, with: senderTitle)
         }
+        
     }
     
     func setRemainingDictValuesFalse(for dictionary: [String: Bool], with key: String){

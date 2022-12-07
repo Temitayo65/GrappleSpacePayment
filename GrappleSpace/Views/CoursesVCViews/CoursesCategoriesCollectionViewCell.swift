@@ -6,10 +6,14 @@
 //
 
 import UIKit
+protocol ButtonDataManager{
+    func didGetCurrentTappedButtonCategory(for button: UIButton)
+}// created a protocal that return the button with its attributes when tapped
 
 class CoursesCategoriesCollectionViewCell: UICollectionViewCell {
     static let identifier = "CoursesCategoriesCollectionViewCell"
-    
+    var delegate: ButtonDataManager? // the delegate that takes the button attribures
+
     
     private let categoriesButton: UIButton = {        
         let button = UIButton(frame: .zero)
@@ -21,7 +25,7 @@ class CoursesCategoriesCollectionViewCell: UICollectionViewCell {
         
         button.translatesAutoresizingMaskIntoConstraints = false
         button.isUserInteractionEnabled = true
-        button.addTarget(nil, action: #selector(CoursesCategoriesCollectionViewTableViewCell.categoryButtonTapped), for: .touchUpInside)
+        button.addTarget(nil, action: #selector(CoursesCategoriesCollectionViewTableViewCell.categoryButtonTapped), for: .touchUpInside) // this calls the categoryButtonTapped function in the CoursesCategoriesCollectionViewTableViewCell in order to set the current title for the button tapped 
         return button
     }()
     
@@ -59,6 +63,8 @@ class CoursesCategoriesCollectionViewCell: UICollectionViewCell {
         categoriesButton.titleLabel?.textAlignment = .center
         categoriesButton.titleLabel?.font = UIFont.italicSystemFont(ofSize: 9)
         if dictValue{
+            self.delegate?.didGetCurrentTappedButtonCategory(for: categoriesButton) // at this point the delegate is assigned the "categories Button Value"
+            // that button value is use in preparation for this function call in the CoursesCategoriesCollectionViewTableViewCell where the cell is loaded with its attributes for its button
             categoriesButton.backgroundColor = .purple
             categoriesButton.setTitleColor(.white, for: .normal)
         }

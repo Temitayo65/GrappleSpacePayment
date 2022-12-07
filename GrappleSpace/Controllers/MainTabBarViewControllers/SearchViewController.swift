@@ -1,5 +1,5 @@
 //
-//  CourseViewController.swift
+//  SearchViewController.swift
 //  GrappleSpace
 //
 //  Created by ADMIN on 29/11/2022.
@@ -7,45 +7,48 @@
 
 import UIKit
 
-class CourseViewController: UIViewController {
-    
+class SearchViewController: UIViewController {
 
-    private let courseTableView: UITableView = {
+    private let searchTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.separatorStyle = .none
         table.showsVerticalScrollIndicator = false
+
         
-        table.register(AllCoursesCollectionViewTableViewCell.self, forCellReuseIdentifier: AllCoursesCollectionViewTableViewCell.identifier)
-        
-        table.register(CoursesCategoriesCollectionViewTableViewCell.self, forCellReuseIdentifier: CoursesCategoriesCollectionViewTableViewCell.identifier)
-        
-        table.register(HomePictureViewTableViewCell.self, forCellReuseIdentifier: HomePictureViewTableViewCell.identifier)
+        table.register(TopSearchCollectionViewTableViewCell.self, forCellReuseIdentifier: TopSearchCollectionViewTableViewCell.identifier)
         
         table.register(HomeSearchBarTableViewCell.self, forCellReuseIdentifier: HomeSearchBarTableViewCell.identifier)
         
+        table.register(SearchPictureViewTableViewCell.self, forCellReuseIdentifier: SearchPictureViewTableViewCell.identifier)
+        
         
         table.isScrollEnabled = true
+        table.keyboardDismissMode = .onDrag
         table.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
+        
+        
         return table
     }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor =  UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
-        view.addSubview(courseTableView)
         
-        courseTableView.delegate = self
-        courseTableView.dataSource = self
-
-        title = "Courses"
-        let attrs = [
-            NSAttributedString.Key.foregroundColor: UIColor.red,
-            NSAttributedString.Key.font: UIFont(name: "SFProDisplay-HeavyItalic", size: 22)!
-        ]
-        UINavigationBar.appearance().titleTextAttributes = attrs
+        title = "Search"
         navigationController?.navigationBar.prefersLargeTitles = true
-        navigationController?.navigationItem.largeTitleDisplayMode = .always
+        //let attrs = [
+        //    NSAttributedString.Key.foregroundColor: UIColor.blue,
+        //    NSAttributedString.Key.font: UIFont(name: "SFProDisplay-HeavyItalic", size: 22)!
+       // ]
+        //UINavigationBar.appearance().titleTextAttributes = attrs
+        
+        //navigationController?.navigationItem.largeTitleDisplayMode = .always
+    
+        view.backgroundColor =  UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
+        view.addSubview(searchTableView)
+        
+        searchTableView.delegate = self
+        searchTableView.dataSource = self
         
         configureNavBar()
         
@@ -58,31 +61,24 @@ class CourseViewController: UIViewController {
     }
     
     private func configureNavBar(){
-        var image = UIImage(named: "femaleavatar")
-        image = image?.withRenderingMode(.alwaysOriginal)
-        let buttonItems: [UIBarButtonItem] = [
-            UIBarButtonItem(title: nil, image: image, target: self, action: nil),
-        ]
-        navigationItem.rightBarButtonItems = buttonItems
-        
-        navigationController?.navigationBar.backgroundColor = UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 0.9)
+       // nothing to put on the navigation bar for now
     }
     
     func applyConstraints(){
-        let courseTableViewConstraints: [NSLayoutConstraint] = [
-            courseTableView.topAnchor.constraint(equalTo: view.topAnchor),
-            courseTableView.bottomAnchor.constraint(equalTo: tabBarController!.tabBar.topAnchor, constant: -1),
-            courseTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
-            courseTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
+        let homeTableViewConstraints: [NSLayoutConstraint] = [
+            searchTableView.topAnchor.constraint(equalTo: view.topAnchor),
+            searchTableView.bottomAnchor.constraint(equalTo: tabBarController!.tabBar.topAnchor, constant: -1),
+            searchTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 10),
+            searchTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -10)
         ]
-        NSLayoutConstraint.activate(courseTableViewConstraints)
+        NSLayoutConstraint.activate(homeTableViewConstraints)
         
     }
     
     
 }
 
-extension CourseViewController: UITableViewDelegate, UITableViewDataSource{
+extension SearchViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
@@ -96,13 +92,15 @@ extension CourseViewController: UITableViewDelegate, UITableViewDataSource{
         switch indexPath.section{
         case 0:
             guard let cell = tableView.dequeueReusableCell(withIdentifier: HomeSearchBarTableViewCell.identifier, for: indexPath) as? HomeSearchBarTableViewCell else{return UITableViewCell()}
+            cell.setPlaceholderText(with: "Search Courses")
             return cell
         case 1:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: CoursesCategoriesCollectionViewTableViewCell.identifier, for: indexPath) as? CoursesCategoriesCollectionViewTableViewCell else{return UITableViewCell()}
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: TopSearchCollectionViewTableViewCell.identifier, for: indexPath) as? TopSearchCollectionViewTableViewCell else{return UITableViewCell()}
             return cell
         case 2:
-            guard let cell = tableView.dequeueReusableCell(withIdentifier: AllCoursesCollectionViewTableViewCell.identifier, for: indexPath) as? AllCoursesCollectionViewTableViewCell else{return UITableViewCell()}
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: SearchPictureViewTableViewCell.identifier, for: indexPath) as? SearchPictureViewTableViewCell else{return UITableViewCell()}
             return cell
+            
         default:
             return UITableViewCell()
         }
@@ -112,11 +110,11 @@ extension CourseViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         switch indexPath.section{
         case 0:
-            return 30
+            return 60
         case 1:
-            return 30
+            return 70
         case 2:
-            return 550
+            return 302
         default:
             return 250
         }
@@ -125,11 +123,11 @@ extension CourseViewController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         switch section{
         case 0:
-            return "Select a course that suits you best "
+            return "Find the best course made just\nfor you "
         case 1:
-            return "Categories"
+            return "Top Search"
         case 2:
-            return "All Courses" // the onlu section title that mutates
+            return nil
         default:
             return nil
         }
@@ -142,29 +140,28 @@ extension CourseViewController: UITableViewDelegate, UITableViewDataSource{
         case 0:
             if let headerView = view as? UITableViewHeaderFooterView {
                 headerView.textLabel?.textAlignment = .center
-                headerView.textLabel?.textColor = UIColor(red: 0.29, green: 0.20, blue: 0.42, alpha: 1)
+                headerView.textLabel?.textColor = UIColor(red: 0.13, green: 0.01, blue: 0.27, alpha: 1)
                 headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-                headerView.textLabel?.font = UIFont(name: "SFProDisplay-HeavyItalic", size: 12)}
-            
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
         case 1:
             if let headerView = view as? UITableViewHeaderFooterView {
                 headerView.textLabel?.textAlignment = .left
                 headerView.textLabel?.textColor = UIColor(red: 0.29, green: 0.20, blue: 0.42, alpha: 1)
                 headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-                headerView.textLabel?.font = UIFont(name: "SFProDisplay-HeavyItalic", size: 14)}
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
         case 2:
             if let headerView = view as? UITableViewHeaderFooterView {
                 headerView.textLabel?.textAlignment = .left
                 headerView.textLabel?.textColor = UIColor(red: 0.29, green: 0.20, blue: 0.42, alpha: 1)
                 headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-                headerView.textLabel?.font = UIFont(name: "SFProDisplay-BlackItalic", size: 16)}
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
             
         default:
             if let headerView = view as? UITableViewHeaderFooterView {
                 headerView.textLabel?.textAlignment = .center
                 headerView.textLabel?.textColor = .black
                 headerView.textLabel?.text = headerView.textLabel?.text?.capitalized
-                headerView.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)}
+                headerView.textLabel?.font = UIFont(name: "SFProDisplay-Bold", size: 12)}
         }
     }
     
@@ -174,6 +171,8 @@ extension CourseViewController: UITableViewDelegate, UITableViewDataSource{
         navigationController?.navigationBar.transform = .init(translationX: 0, y: min(0,-offset))
         //implementation for navBar move with scroll
     }
+    
+
+ 
 
 }
-
